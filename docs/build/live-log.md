@@ -1,0 +1,29 @@
+# Live Build Log
+
+## 2026-02-22
+- Initialized live documentation workflow.
+- Created documentation structure for build, architecture, and product notes.
+- Next step: scaffold application stack and baseline data model.
+- Scaffolded Next.js TypeScript + Tailwind app in `web/`.
+- Replaced starter page with mobile-first JobJar dashboard prototype:
+  - Today list with quick complete action
+  - Room rollup cards
+  - Calendar strip placeholder for due-state visibility
+- Added initial app domain types and RAG status logic in `web/src/lib/`.
+- Added SQL schema draft in `docs/architecture/schema.sql`.
+- Added rule spec for RAG calculations in `docs/architecture/rag-rules.md`.
+- Added reporting and public dashboard draft in `docs/product/reporting-spec.md`.
+- Added production DB stack in `web/`:
+  - Prisma schema in `web/prisma/schema.prisma`
+  - Prisma singleton client in `web/src/lib/prisma.ts`
+  - Seed script in `web/prisma/seed.ts`
+  - DB scripts in `web/package.json`
+- Added deployment verification endpoint `web/src/app/api/health/db/route.ts`.
+- Added Vercel deployment + Postgres setup runbook in `docs/build/vercel-db-setup.md`.
+- Added env template `web/.env.example` for `DATABASE_URL` and `DIRECT_URL`.
+- Adjusted Prisma to `v6.16.3` to avoid Prisma 7 datasource config migration complexity in this phase.
+- Updated build script to `next build --webpack` for stable sandbox-compatible builds.
+- Validation completed:
+  - `npm run db:generate` passed
+  - `npm run lint` passed
+  - `npm run build` passed

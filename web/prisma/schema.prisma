@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum MemberRole {
+  admin
+  member
+  viewer
+}
+
+enum RecurrenceType {
+  daily
+  weekly
+  monthly
+  custom
+}
+
+enum OccurrenceStatus {
+  pending
+  done
+  skipped
+  overdue
+}
+
+enum LogAction {
+  started
+  completed
+  skipped
+  reopened
+}
+
+enum ShareScope {
+  public_dashboard
+  room_view
+}
+
+model User {
+  id              String             @id @default(uuid()) @db.Uuid
+  email           String             @unique
+  displayName     String
+  createdAt       DateTime           @default(now())
+  ownedHouseholds Household[]        @relation("HouseholdOwner")
+  memberships     HouseholdMember[]
+  completions     TaskOccurrence[]   @relation("OccurrenceCompleter")
+  assignments     TaskAssignment[]
+}
+
+model Household {
+  id          String            @id @default(uuid()) @db.Uuid
+  name        String
+  timezone    String            @default("Europe/Dublin")
+  ownerUserId String            @db.Uuid
+  createdAt   DateTime          @default(now())
+  owner       User              @relation("HouseholdOwner", fields: [ownerUserId], references: [id])
+  members     HouseholdMember[]
+  rooms       Room[]
+  shareLinks  ShareLink[]
+}
+
+model HouseholdMember {
+  householdId String    @db.Uuid
+  userId      String    @db.Uuid
+  role        MemberRole
+  joinedAt    DateTime  @default(now())
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([householdId, userId])
+}
+
+model Room {
+  id          String   @id @default(uuid()) @db.Uuid
+  householdId String   @db.Uuid
+  name        String
+  designation String
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@index([householdId])
+}
+
+model Task {
+  id               String           @id @default(uuid()) @db.Uuid
+  roomId           String           @db.Uuid
+  title            String
+  description      String?
+  priority         Int              @default(3)
+  estimatedMinutes Int              @default(15)
+  graceHours       Int              @default(12)
+  active           Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  room             Room             @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  schedule         TaskSchedule?
+  occurrences      TaskOccurrence[]
+  logs             TaskLog[]
+  assignments      TaskAssignment[]
+
+  @@index([roomId])
+}
+
+model TaskSchedule {
+  id             String         @id @default(uuid()) @db.Uuid
+  taskId         String         @unique @db.Uuid
+  recurrenceType RecurrenceType
+  intervalCount  Int            @default(1)
+  daysOfWeek     Int[]
+  dayOfMonth     Int?
+  timeOfDay      String?
+  nextDueAt      DateTime?
+  task           Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model TaskOccurrence {
+  id          String           @id @default(uuid()) @db.Uuid
+  taskId      String           @db.Uuid
+  dueAt       DateTime
+  status      OccurrenceStatus @default(pending)
+  completedAt DateTime?
+  completedBy String?          @db.Uuid
+  createdAt   DateTime         @default(now())
+  task        Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  completer   User?            @relation("OccurrenceCompleter", fields: [completedBy], references: [id])
+  logs        TaskLog[]
+
+  @@index([dueAt])
+  @@index([taskId])
+}
+
+model TaskLog {
+  id             String          @id @default(uuid()) @db.Uuid
+  taskId         String          @db.Uuid
+  occurrenceId   String?         @db.Uuid
+  action         LogAction
+  atTime         DateTime        @default(now())
+  durationSeconds Int?
+  note           String?
+  task           Task            @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  occurrence     TaskOccurrence? @relation(fields: [occurrenceId], references: [id], onDelete: SetNull)
+}
+
+model TaskAssignment {
+  id           String   @id @default(uuid()) @db.Uuid
+  taskId       String   @db.Uuid
+  userId       String   @db.Uuid
+  assignedFrom DateTime
+  assignedTo   DateTime?
+  createdAt    DateTime @default(now())
+  task         Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ShareLink {
+  id          String    @id @default(uuid()) @db.Uuid
+  householdId String    @db.Uuid
+  slug        String    @unique
+  scope       ShareScope
+  expiresAt   DateTime?
+  enabled     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+}

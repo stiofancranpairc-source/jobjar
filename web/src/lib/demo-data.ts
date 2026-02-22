@@ -1,0 +1,60 @@
+import { Room, TaskItem } from "@/lib/types";
+
+export const rooms: Room[] = [
+  { id: "kitchen", name: "Kitchen", designation: "Food + surfaces" },
+  { id: "living", name: "Living Room", designation: "Shared comfort space" },
+  { id: "garden", name: "Garden", designation: "Outdoor maintenance" },
+];
+
+export const tasks: TaskItem[] = [
+  {
+    id: "task-floor-mop",
+    roomId: "kitchen",
+    title: "Mop floors",
+    dueAt: "2026-02-22T18:00:00.000Z",
+    graceHours: 12,
+    estimatedMinutes: 20,
+    status: "pending",
+    lastCompletedAt: "2026-02-20T18:11:00.000Z",
+  },
+  {
+    id: "task-hoover",
+    roomId: "living",
+    title: "Hoover rug",
+    dueAt: "2026-02-22T12:00:00.000Z",
+    graceHours: 12,
+    estimatedMinutes: 15,
+    status: "pending",
+    lastCompletedAt: "2026-02-19T11:40:00.000Z",
+  },
+  {
+    id: "task-plants",
+    roomId: "garden",
+    title: "Water plants",
+    dueAt: "2026-02-21T08:00:00.000Z",
+    graceHours: 8,
+    estimatedMinutes: 10,
+    status: "pending",
+    lastCompletedAt: "2026-02-18T08:06:00.000Z",
+  },
+  {
+    id: "task-car",
+    roomId: "garden",
+    title: "Clean the car",
+    dueAt: "2026-02-23T10:00:00.000Z",
+    graceHours: 24,
+    estimatedMinutes: 40,
+    status: "pending",
+    lastCompletedAt: "2026-02-15T10:45:00.000Z",
+  },
+  {
+    id: "task-dog",
+    roomId: "living",
+    title: "Walk the dog",
+    dueAt: "2026-02-22T16:00:00.000Z",
+    graceHours: 2,
+    estimatedMinutes: 30,
+    status: "done",
+    lastCompletedAt: "2026-02-22T15:42:00.000Z",
+  },
+];
