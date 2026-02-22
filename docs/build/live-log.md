@@ -78,3 +78,23 @@
 - Validation completed:
   - `npm run lint` passed
   - `npm run build` passed
+- Performed full product UX direction refresh across Daily/Admin/TV.
+- Daily (`/`) redesigned for family-friendly mobile usage:
+  - playful mission-board visual language
+  - stars/progress gamification
+  - larger action buttons and friendlier card tone
+- Admin (`/admin`) redesigned into a board-style workspace inspired by DevOps layout:
+  - Rooms lane
+  - People lane
+  - Quick Task Capture lane
+  - Task Workbench grouped by room
+- TV (`/tv`) redesigned with star-rich visual style and stronger information density:
+  - animated starfield background
+  - star wall
+  - room completion progress bars
+  - richer metrics + pies
+- Added reusable visual utility classes in global CSS for playful, admin, and TV modes.
+- Updated task update action behavior to reliably toggle strict mode off when unchecked in admin forms.
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed

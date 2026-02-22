@@ -222,7 +222,9 @@ export async function updateTaskAction(formData: FormData) {
     ? formData.get("strictMode") === "on"
       ? "strict"
       : "basic"
-    : currentValidationMode;
+    : formData.has("strictModeMarker")
+      ? "basic"
+      : currentValidationMode;
   const minimumMinutes = toNonNegativeInt(formData.get("minimumMinutes"), currentMinimum);
   const dueAt = toDate(formData.get("dueAt"));
   const description = buildValidationMeta(validationMode, minimumMinutes);

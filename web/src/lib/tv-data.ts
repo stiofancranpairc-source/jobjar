@@ -6,7 +6,8 @@ export type TvData = {
   doneTasks: number;
   pendingTasks: number;
   rag: { green: number; amber: number; red: number };
-  roomLoad: Array<{ room: string; total: number; overdue: number }>;
+  roomLoad: Array<{ room: string; total: number; overdue: number; done: number; completion: number }>;
+  starScore: number;
 };
 
 export async function getTvData(): Promise<TvData> {
@@ -22,10 +23,14 @@ export async function getTvData(): Promise<TvData> {
   const roomLoad = rooms.map((room) => {
     const roomTasks = tasks.filter((task) => task.roomId === room.id);
     const overdue = roomTasks.filter((task) => deriveTaskRag(task, now) === "red").length;
+    const done = roomTasks.filter((task) => task.status === "done").length;
+    const completion = roomTasks.length === 0 ? 0 : Math.round((done / roomTasks.length) * 100);
     return {
       room: room.name,
       total: roomTasks.length,
       overdue,
+      done,
+      completion,
     };
   });
 
@@ -35,5 +40,6 @@ export async function getTvData(): Promise<TvData> {
     pendingTasks: tasks.filter((task) => task.status !== "done").length,
     rag,
     roomLoad,
+    starScore: tasks.filter((task) => task.status === "done").length * 5 + rag.green * 2,
   };
 }
