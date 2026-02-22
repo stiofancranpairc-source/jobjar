@@ -54,6 +54,37 @@ body {
   border-radius: 1.5rem;
 }
 
+.task-app-card {
+  border-radius: 1.2rem;
+  border: 1px solid rgba(185, 194, 180, 0.5);
+  padding: 0.85rem;
+  background: #fff;
+}
+
+.task-app-card.amber {
+  background: linear-gradient(180deg, #fff7eb 0%, #fff3e1 100%);
+}
+
+.task-app-card.green {
+  background: linear-gradient(180deg, #effcf3 0%, #e5f7eb 100%);
+}
+
+.task-app-card.red {
+  background: linear-gradient(180deg, #fff0ee 0%, #ffe6e2 100%);
+}
+
+.due-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid rgba(70, 88, 76, 0.16);
+  background: rgba(255, 255, 255, 0.82);
+}
+
 .lane-shell {
   border-radius: 1.25rem;
   border: 1px solid var(--border);

@@ -96,6 +96,16 @@ export default async function Home() {
           </p>
         </header>
 
+        <section className="playful-card p-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Active</p>
+              <p className="text-sm text-muted">Tap a card and move jobs forward</p>
+            </div>
+            <button className="action-btn subtle">Refresh All</button>
+          </div>
+        </section>
+
         <TaskLane title="To Do" subtitle="Pick one and press Start" items={todo} laneClass="lane-todo" roomNameById={roomNameById} />
         <TaskLane
           title="In Progress"
@@ -152,8 +162,9 @@ function TaskCard({
   rag: RagStatus;
   roomName: string;
 }) {
+  const dueText = dueBadge(task.dueAt, task.status);
   return (
-    <article className="playful-card p-3">
+    <article className={`task-app-card ${rag}`}>
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-sm font-semibold">
@@ -171,7 +182,12 @@ function TaskCard({
             <p className="mt-1 text-xs font-semibold text-amber">Strict check: Start + note + {task.minimumMinutes} min minimum.</p>
           ) : null}
         </div>
-        <span className={`status-pill ${rag}`}>{rag}</span>
+        <div className="text-right">
+          <span className={`status-pill ${rag}`}>{rag}</span>
+          <p className="mt-1">
+            <span className="due-pill">{dueText}</span>
+          </p>
+        </div>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -233,4 +249,25 @@ function taskEmoji(title: string, roomName: string) {
   if (t.includes("car")) return "🚗";
   if (t.includes("floor") || t.includes("hoover") || t.includes("vac")) return "🧹";
   return "⭐";
+}
+
+function dueBadge(dueIso: string, status: TaskItem["status"]) {
+  if (status === "done") {
+    return "done";
+  }
+  const due = new Date(dueIso).getTime();
+  const now = Date.now();
+  const diffMin = Math.floor((due - now) / 60000);
+  if (diffMin <= 0) {
+    return "overdue";
+  }
+  if (diffMin < 60) {
+    return `${diffMin}m`;
+  }
+  const hours = Math.floor(diffMin / 60);
+  if (hours < 24) {
+    return `${hours}h`;
+  }
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
 }

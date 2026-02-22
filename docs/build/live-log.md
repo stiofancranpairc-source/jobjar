@@ -112,3 +112,15 @@
 - Validation completed:
   - `npm run lint` passed
   - `npm run build` passed
+- Reviewed `docs/build/handover.md` and extracted inspiration patterns:
+  - role-based family model
+  - clear parent/admin vs daily-use split
+  - gamification-friendly status language
+- Applied attached-layout-inspired visual updates to main board:
+  - added "Active" utility card with refresh affordance
+  - switched task items to soft app-like pastel cards
+  - added explicit due badge pill on each task card
+  - preserved simple mobile action flow
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed
