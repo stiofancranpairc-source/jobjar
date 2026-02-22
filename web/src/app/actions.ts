@@ -53,7 +53,16 @@ export async function deleteRoomAction(formData: FormData) {
     return;
   }
 
-  await prisma.room.delete({ where: { id: roomId } });
+  await prisma.$transaction([
+    prisma.task.updateMany({
+      where: { roomId },
+      data: { active: false },
+    }),
+    prisma.room.update({
+      where: { id: roomId },
+      data: { active: false },
+    }),
+  ]);
   revalidatePath("/");
 }
 
@@ -143,7 +152,10 @@ export async function deleteTaskAction(formData: FormData) {
     return;
   }
 
-  await prisma.task.delete({ where: { id: taskId } });
+  await prisma.task.update({
+    where: { id: taskId },
+    data: { active: false },
+  });
   revalidatePath("/");
 }
 

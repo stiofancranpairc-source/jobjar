@@ -37,3 +37,11 @@
 - Validation completed:
   - `npm run lint` passed
   - `npm run build` passed
+- Simplified UX into clear sections:
+  - Daily Jobs (primary usage)
+  - Setup & Admin (collapsed)
+- Reworked delete behavior to archive items (soft delete) for safer family usage.
+- Replaced mixed save/delete buttons with dedicated archive forms for clearer actions.
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed
