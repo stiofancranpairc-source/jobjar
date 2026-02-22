@@ -28,7 +28,7 @@ export default async function LoginPage({
         <section className="playful-card p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">Household Job Jar</p>
           <h1 className="mt-1 text-2xl font-bold">Sign In</h1>
-          <p className="mt-1 text-sm text-muted">Choose your name and enter the household passcode.</p>
+          <p className="mt-1 text-sm text-muted">Choose your name and enter your personal passcode.</p>
           <form action={loginAction} className="mt-4 space-y-3">
             <input type="hidden" name="next" value={nextPath} />
             <label className="block">
@@ -49,7 +49,7 @@ export default async function LoginPage({
                 type="password"
                 required
                 className="w-full rounded-xl border border-border bg-white px-3 py-2 text-sm"
-                placeholder="Household passcode"
+                placeholder="Your personal passcode"
               />
             </label>
             {showError ? <p className="text-sm font-semibold text-red">Invalid login details.</p> : null}

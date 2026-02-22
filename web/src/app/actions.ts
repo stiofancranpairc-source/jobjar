@@ -2,11 +2,14 @@
 
 import { getOrCreateDefaultHouseholdId } from "@/lib/household";
 import { prisma } from "@/lib/prisma";
-import { clearSession, getHouseholdPasscode, getSessionUserId, setSessionUserId } from "@/lib/auth";
+import { clearSession, getHouseholdPasscode, getSessionRole, getSessionUserId, setSessionUserId } from "@/lib/auth";
+import { getUserPasswordHash, setUserPasswordHash } from "@/lib/auth-store";
+import { hashPassword, verifyPassword } from "@/lib/password";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function createRoomAction(formData: FormData) {
+  await requireAdminAction();
   const name = String(formData.get("name") ?? "").trim();
   const designation = String(formData.get("designation") ?? "").trim() || "General";
 
@@ -33,6 +36,7 @@ export async function createRoomAction(formData: FormData) {
 }
 
 export async function updateRoomAction(formData: FormData) {
+  await requireAdminAction();
   const roomId = String(formData.get("roomId") ?? "");
   const name = String(formData.get("name") ?? "").trim();
   const designation = String(formData.get("designation") ?? "").trim() || "General";
@@ -50,6 +54,7 @@ export async function updateRoomAction(formData: FormData) {
 }
 
 export async function deleteRoomAction(formData: FormData) {
+  await requireAdminAction();
   const roomId = String(formData.get("roomId") ?? "");
   if (!roomId) {
     return;
@@ -69,6 +74,7 @@ export async function deleteRoomAction(formData: FormData) {
 }
 
 export async function createTaskAction(formData: FormData) {
+  await requireAdminAction();
   const title = String(formData.get("title") ?? "").trim();
   const roomId = String(formData.get("roomId") ?? "").trim();
   const estimatedMinutes = toPositiveInt(formData.get("estimatedMinutes"), 15);
@@ -129,6 +135,7 @@ export async function createTaskAction(formData: FormData) {
 }
 
 export async function createQuickTaskAction(formData: FormData) {
+  await requireSessionMemberAction();
   const title = String(formData.get("title") ?? "").trim();
   const requestedRoomId = String(formData.get("roomId") ?? "").trim();
   if (!title) {
@@ -204,6 +211,7 @@ export async function createQuickTaskAction(formData: FormData) {
 }
 
 export async function updateTaskAction(formData: FormData) {
+  await requireAdminAction();
   const taskId = String(formData.get("taskId") ?? "").trim();
   if (!taskId) {
     return;
@@ -323,6 +331,7 @@ export async function updateTaskAction(formData: FormData) {
 }
 
 export async function deleteTaskAction(formData: FormData) {
+  await requireAdminAction();
   const taskId = String(formData.get("taskId") ?? "").trim();
   if (!taskId) {
     return;
@@ -336,8 +345,10 @@ export async function deleteTaskAction(formData: FormData) {
 }
 
 export async function createPersonAction(formData: FormData) {
+  await requireAdminAction();
   const displayName = String(formData.get("displayName") ?? "").trim();
   const emailInput = String(formData.get("email") ?? "").trim();
+  const passcodeInput = String(formData.get("passcode") ?? "").trim();
 
   if (!displayName) {
     return;
@@ -371,10 +382,15 @@ export async function createPersonAction(formData: FormData) {
     },
   });
 
+  if (passcodeInput.length >= 4) {
+    await setUserPasswordHash(user.id, hashPassword(passcodeInput));
+  }
+
   refreshViews();
 }
 
 export async function removePersonAction(formData: FormData) {
+  await requireAdminAction();
   const userId = String(formData.get("userId") ?? "").trim();
   if (!userId) {
     return;
@@ -394,7 +410,19 @@ export async function removePersonAction(formData: FormData) {
   refreshViews();
 }
 
+export async function setPersonPasscodeAction(formData: FormData) {
+  await requireAdminAction();
+  const userId = String(formData.get("userId") ?? "").trim();
+  const passcode = String(formData.get("passcode") ?? "").trim();
+  if (!userId || passcode.length < 4) {
+    return;
+  }
+  await setUserPasswordHash(userId, hashPassword(passcode));
+  refreshViews();
+}
+
 export async function startTaskAction(formData: FormData) {
+  await requireSessionMemberAction();
   const taskId = String(formData.get("taskId") ?? "").trim();
   if (!taskId) {
     return;
@@ -412,6 +440,7 @@ export async function startTaskAction(formData: FormData) {
 }
 
 export async function completeTaskAction(formData: FormData) {
+  await requireSessionMemberAction();
   const taskId = String(formData.get("taskId") ?? "").trim();
   const note = String(formData.get("note") ?? "").trim();
   if (!taskId) {
@@ -497,33 +526,8 @@ export async function completeTaskAction(formData: FormData) {
   refreshViews();
 }
 
-export async function loginAction(formData: FormData) {
-  const userId = String(formData.get("userId") ?? "").trim();
-  const passcode = String(formData.get("passcode") ?? "").trim();
-  const nextPath = String(formData.get("next") ?? "/").trim() || "/";
-
-  if (!userId || passcode !== getHouseholdPasscode()) {
-    redirect(`/login?next=${encodeURIComponent(nextPath)}&error=invalid`);
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true },
-  });
-  if (!user) {
-    redirect(`/login?next=${encodeURIComponent(nextPath)}&error=invalid`);
-  }
-
-  await setSessionUserId(user.id);
-  redirect(nextPath.startsWith("/") ? nextPath : "/");
-}
-
-export async function logoutAction() {
-  await clearSession();
-  redirect("/login");
-}
-
 export async function reopenTaskAction(formData: FormData) {
+  await requireSessionMemberAction();
   const taskId = String(formData.get("taskId") ?? "").trim();
   if (!taskId) {
     return;
@@ -555,6 +559,38 @@ export async function reopenTaskAction(formData: FormData) {
   });
 
   refreshViews();
+}
+
+export async function loginAction(formData: FormData) {
+  const userId = String(formData.get("userId") ?? "").trim();
+  const passcode = String(formData.get("passcode") ?? "").trim();
+  const nextPath = String(formData.get("next") ?? "/").trim() || "/";
+
+  if (!userId) {
+    redirect(`/login?next=${encodeURIComponent(nextPath)}&error=invalid`);
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true },
+  });
+  if (!user) {
+    redirect(`/login?next=${encodeURIComponent(nextPath)}&error=invalid`);
+  }
+
+  const storedHash = await getUserPasswordHash(user.id);
+  const passcodeValid = storedHash ? verifyPassword(passcode, storedHash) : passcode === getHouseholdPasscode();
+  if (!passcodeValid) {
+    redirect(`/login?next=${encodeURIComponent(nextPath)}&error=invalid`);
+  }
+
+  await setSessionUserId(user.id);
+  redirect(nextPath.startsWith("/") ? nextPath : "/");
+}
+
+export async function logoutAction() {
+  await clearSession();
+  redirect("/login");
 }
 
 function toPositiveInt(value: FormDataEntryValue | null, fallback: number) {
@@ -622,4 +658,23 @@ function refreshViews() {
   revalidatePath("/");
   revalidatePath("/admin");
   revalidatePath("/tv");
+  revalidatePath("/login");
+}
+
+async function requireAdminAction() {
+  const userId = await getSessionUserId();
+  if (!userId) {
+    redirect("/login?next=/admin");
+  }
+  const role = await getSessionRole();
+  if (role !== "admin") {
+    redirect("/");
+  }
+}
+
+async function requireSessionMemberAction() {
+  const userId = await getSessionUserId();
+  if (!userId) {
+    redirect("/login?next=/");
+  }
 }

@@ -124,3 +124,12 @@
 - Validation completed:
   - `npm run lint` passed
   - `npm run build` passed
+- Upgraded auth from shared-only passcode to per-user passcodes with role-gated admin controls.
+- Added credential storage layer (`auth_credentials`) via SQL-backed auth store (no Prisma schema migration required).
+- Added secure passcode hashing/verification using Node `scrypt`.
+- Enforced admin role for admin routes/actions (rooms/tasks/people management).
+- Added passcode assignment/reset in Admin People section.
+- Daily board now includes assignment visibility and personal completion progress.
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed

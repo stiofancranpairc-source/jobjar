@@ -6,17 +6,18 @@ import {
   deleteTaskAction,
   logoutAction,
   removePersonAction,
+  setPersonPasscodeAction,
   updateRoomAction,
   updateTaskAction,
 } from "@/app/actions";
-import { requireSessionUserId } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { getAdminData } from "@/lib/admin-data";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  await requireSessionUserId("/admin");
+  await requireAdmin("/admin");
   const { rooms, tasks, people } = await getAdminData();
   const peopleById = new Map(people.map((person) => [person.id, person.displayName]));
 
@@ -83,19 +84,39 @@ export default async function AdminPage() {
             <form action={createPersonAction} className="mt-3 space-y-2 rounded-xl border border-[#b7cada] bg-[#f7fbff] p-3">
               <input name="displayName" type="text" required placeholder="Name" className="admin-input w-full px-3 py-2 text-sm" />
               <input name="email" type="email" placeholder="Email (optional)" className="admin-input w-full px-3 py-2 text-sm" />
+              <input
+                name="passcode"
+                type="password"
+                minLength={4}
+                placeholder="Personal passcode (min 4)"
+                className="admin-input w-full px-3 py-2 text-sm"
+              />
               <button className="w-full rounded-lg bg-[#3c9bd8] px-3 py-2 text-sm font-semibold text-white">Add person</button>
             </form>
             <div className="mt-3 space-y-2">
               {people.map((person) => (
-                <article key={person.id} className="flex items-center justify-between gap-3 rounded-xl border border-[#b7cada] bg-[#f7fbff] px-3 py-2">
+                <article key={person.id} className="rounded-xl border border-[#b7cada] bg-[#f7fbff] px-3 py-2">
                   <div>
                     <p className="text-sm font-semibold">{person.displayName}</p>
                     <p className="text-xs text-[#587690]">{person.role} • {person.email}</p>
                   </div>
-                  <form action={removePersonAction}>
-                    <input type="hidden" name="userId" value={person.id} />
-                    <button className="rounded-lg border border-[#d35d5d] px-2 py-1 text-xs font-semibold text-[#b63f3f]">Remove</button>
-                  </form>
+                  <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]">
+                    <form action={setPersonPasscodeAction} className="flex gap-2">
+                      <input type="hidden" name="userId" value={person.id} />
+                      <input
+                        name="passcode"
+                        type="password"
+                        minLength={4}
+                        placeholder="Reset passcode"
+                        className="admin-input w-full px-2 py-1.5 text-xs"
+                      />
+                      <button className="rounded-lg border border-[#8ca9bf] px-2 py-1 text-xs font-semibold">Set</button>
+                    </form>
+                    <form action={removePersonAction}>
+                      <input type="hidden" name="userId" value={person.id} />
+                      <button className="rounded-lg border border-[#d35d5d] px-2 py-1 text-xs font-semibold text-[#b63f3f]">Remove</button>
+                    </form>
+                  </div>
                 </article>
               ))}
             </div>
