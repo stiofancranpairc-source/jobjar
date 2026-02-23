@@ -144,3 +144,11 @@
   - `npm run db:generate` passed
   - `npm run lint` passed
   - `npm run build` passed
+- Simplified Admin Step 3 task setup UX for mobile and family use:
+  - task create form now defaults to quick fields (title, room, assignee, due date)
+  - moved recurrence/timing/validation controls into an `Advanced options` expander
+  - task edit cards now show core fields first, with scheduling/strict fields in an `Advanced` expander
+  - kept save/archive actions unchanged for existing flow
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed

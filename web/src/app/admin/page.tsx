@@ -140,7 +140,7 @@ export default async function AdminPage() {
 
         <section id="step-tasks" className="admin-panel p-4">
           <h2 className="text-lg font-semibold">Step 3: Tasks</h2>
-          <p className="text-xs text-[#587690]">Add tasks with frequency and assignment. Fine-tune in the workbench below.</p>
+          <p className="text-xs text-[#587690]">Quick add first. Open Advanced only when you need detailed scheduling or strict validation.</p>
 
           <form action={createTaskAction} className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[#b7cada] bg-[#f7fbff] p-3 md:grid-cols-4">
             <input name="title" type="text" required placeholder="Task title" className="admin-input px-3 py-2 text-sm" />
@@ -161,20 +161,25 @@ export default async function AdminPage() {
               ))}
             </select>
             <input name="dueAt" type="datetime-local" className="admin-input px-3 py-2 text-sm" />
-            <select name="recurrenceType" defaultValue="weekly" className="admin-input px-3 py-2 text-sm">
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="custom">Custom</option>
-            </select>
-            <input name="recurrenceInterval" type="number" min={1} defaultValue={1} className="admin-input px-3 py-2 text-sm" />
-            <input name="recurrenceTime" type="time" defaultValue="09:00" className="admin-input px-3 py-2 text-sm" />
-            <input name="estimatedMinutes" type="number" min={1} defaultValue={15} className="admin-input px-3 py-2 text-sm" />
-            <input name="graceHours" type="number" min={1} defaultValue={12} className="admin-input px-3 py-2 text-sm" />
-            <input name="minimumMinutes" type="number" min={0} defaultValue={0} className="admin-input px-3 py-2 text-sm" />
-            <label className="flex items-center gap-2 rounded-lg border border-[#b7cada] px-3 py-2 text-xs text-[#48637a]">
-              <input type="checkbox" name="strictMode" /> Strict proof mode
-            </label>
+            <details className="rounded-lg border border-[#d3e2ee] bg-white px-3 py-2 text-sm text-[#48637a] md:col-span-4">
+              <summary className="cursor-pointer font-semibold">Advanced options</summary>
+              <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3">
+                <select name="recurrenceType" defaultValue="weekly" className="admin-input px-3 py-2 text-sm">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <input name="recurrenceInterval" type="number" min={1} defaultValue={1} className="admin-input px-3 py-2 text-sm" />
+                <input name="recurrenceTime" type="time" defaultValue="09:00" className="admin-input px-3 py-2 text-sm" />
+                <input name="estimatedMinutes" type="number" min={1} defaultValue={15} className="admin-input px-3 py-2 text-sm" />
+                <input name="graceHours" type="number" min={1} defaultValue={12} className="admin-input px-3 py-2 text-sm" />
+                <input name="minimumMinutes" type="number" min={0} defaultValue={0} className="admin-input px-3 py-2 text-sm" />
+              </div>
+              <label className="mt-2 flex items-center gap-2 rounded-lg border border-[#b7cada] px-3 py-2 text-xs text-[#48637a]">
+                <input type="checkbox" name="strictMode" /> Strict proof mode
+              </label>
+            </details>
             <button className="rounded-lg bg-[#f2b13f] px-3 py-2 text-sm font-semibold text-[#4b3209] md:col-span-4">Add task</button>
           </form>
 
@@ -214,28 +219,27 @@ export default async function AdminPage() {
                             </select>
                           </div>
 
-                          <div className="grid grid-cols-3 gap-2">
-                            <select name="recurrenceType" defaultValue={task.recurrenceType} className="admin-input px-2 py-1.5 text-xs">
-                              <option value="daily">Daily</option>
-                              <option value="weekly">Weekly</option>
-                              <option value="monthly">Monthly</option>
-                              <option value="custom">Custom</option>
-                            </select>
-                            <input name="recurrenceInterval" type="number" min={1} defaultValue={task.recurrenceInterval} className="admin-input px-2 py-1.5 text-xs" />
-                            <input name="recurrenceTime" type="time" defaultValue={task.recurrenceTime} className="admin-input px-2 py-1.5 text-xs" />
-                          </div>
-
-                          <div className="grid grid-cols-3 gap-2">
-                            <input name="estimatedMinutes" type="number" min={1} defaultValue={task.estimatedMinutes} className="admin-input px-2 py-1.5 text-xs" />
-                            <input name="graceHours" type="number" min={1} defaultValue={task.graceHours} className="admin-input px-2 py-1.5 text-xs" />
-                            <input name="minimumMinutes" type="number" min={0} defaultValue={task.minimumMinutes} className="admin-input px-2 py-1.5 text-xs" />
-                          </div>
-
-                          <label className="flex items-center gap-1 rounded-lg border border-[#b7cada] px-2 py-1.5 text-xs text-[#48637a]">
-                            <input type="checkbox" name="strictMode" defaultChecked={task.validationMode === "strict"} /> Strict mode
-                          </label>
-
                           <input name="dueAt" type="datetime-local" defaultValue={toDateTimeLocal(task.dueAt)} className="admin-input w-full px-2 py-1.5 text-xs" />
+
+                          <details className="rounded-lg border border-[#d3e2ee] bg-white px-2 py-1.5 text-xs text-[#48637a]">
+                            <summary className="cursor-pointer font-semibold">Advanced</summary>
+                            <div className="mt-2 grid grid-cols-3 gap-2">
+                              <select name="recurrenceType" defaultValue={task.recurrenceType} className="admin-input px-2 py-1.5 text-xs">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="custom">Custom</option>
+                              </select>
+                              <input name="recurrenceInterval" type="number" min={1} defaultValue={task.recurrenceInterval} className="admin-input px-2 py-1.5 text-xs" />
+                              <input name="recurrenceTime" type="time" defaultValue={task.recurrenceTime} className="admin-input px-2 py-1.5 text-xs" />
+                              <input name="estimatedMinutes" type="number" min={1} defaultValue={task.estimatedMinutes} className="admin-input px-2 py-1.5 text-xs" />
+                              <input name="graceHours" type="number" min={1} defaultValue={task.graceHours} className="admin-input px-2 py-1.5 text-xs" />
+                              <input name="minimumMinutes" type="number" min={0} defaultValue={task.minimumMinutes} className="admin-input px-2 py-1.5 text-xs" />
+                            </div>
+                            <label className="mt-2 flex items-center gap-1 rounded-lg border border-[#b7cada] px-2 py-1.5 text-xs text-[#48637a]">
+                              <input type="checkbox" name="strictMode" defaultChecked={task.validationMode === "strict"} /> Strict mode
+                            </label>
+                          </details>
 
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-[11px] text-[#587690]">Assigned: {peopleById.get(task.assigneeUserId) ?? "Unassigned"}</span>
