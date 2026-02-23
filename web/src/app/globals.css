@@ -55,7 +55,7 @@ body {
 
 .playful-card {
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.88);
+  background: linear-gradient(180deg, rgba(246, 251, 255, 0.94) 0%, rgba(238, 246, 255, 0.92) 100%);
   box-shadow:
     0 2px 0 rgba(16, 34, 25, 0.04),
     0 10px 30px rgba(35, 51, 40, 0.08);
@@ -65,7 +65,7 @@ body {
 .board-shell {
   border-radius: 1.2rem;
   border: 1px solid #cfdef4;
-  background: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(180deg, rgba(244, 250, 255, 0.95) 0%, rgba(235, 244, 255, 0.9) 100%);
   box-shadow:
     0 2px 0 rgba(23, 38, 58, 0.04),
     0 14px 32px rgba(63, 109, 184, 0.09);
@@ -123,7 +123,7 @@ body {
 .task-mobile-card {
   border-radius: 1rem;
   border: 1px solid #d6e3f5;
-  background: #fff;
+  background: linear-gradient(180deg, #fbfdff 0%, #f2f8ff 100%);
   padding: 0.85rem;
 }
 
@@ -168,14 +168,14 @@ body {
 
 .action-btn.subtle {
   border: 1px solid #cfdcf2;
-  background: #fff;
+  background: linear-gradient(180deg, #f8fbff 0%, #ecf3ff 100%);
   color: #1a2c44;
 }
 
 .action-btn.warn {
   border: 1px solid var(--red);
   color: var(--red);
-  background: #fff;
+  background: linear-gradient(180deg, #fff7f7 0%, #ffecee 100%);
 }
 
 .action-btn.bright {
@@ -204,7 +204,7 @@ body {
 .admin-input {
   border-radius: 0.7rem;
   border: 1px solid rgba(103, 135, 164, 0.36);
-  background: #fff;
+  background: linear-gradient(180deg, #f8fcff 0%, #f0f6ff 100%);
   color: #1a3145;
 }
 

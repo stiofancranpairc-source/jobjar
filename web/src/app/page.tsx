@@ -49,7 +49,7 @@ export default async function Home() {
             </form>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-[#d7e3f4] bg-white px-3 py-2">
+          <div className="mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-[#d7e3f4] bg-[#eef4ff] px-3 py-2">
             <p className="text-sm font-semibold">My jobs:</p>
             <p className="text-sm text-[#5e6e80]">
               {myDone}/{myTasks.length} done ({myRate}%)
@@ -64,7 +64,7 @@ export default async function Home() {
             <StatChip label="In progress" value={String(inProgress.length)} />
           </div>
 
-          <form action={createQuickTaskAction} className="mt-3 grid grid-cols-1 gap-2 rounded-2xl border border-[#d7e3f4] bg-white p-3 sm:grid-cols-[1fr_auto_auto]">
+          <form action={createQuickTaskAction} className="mt-3 grid grid-cols-1 gap-2 rounded-2xl border border-[#d7e3f4] bg-[#f3f8ff] p-3 sm:grid-cols-[1fr_auto_auto]">
             <input
               name="title"
               type="text"
@@ -130,14 +130,14 @@ function TaskSection({
           <h2 className="text-lg font-semibold text-[#17263a]">{title}</h2>
           <p className="text-xs text-[#5e6e80]">{subtitle}</p>
         </div>
-        <span className="rounded-full border border-[#d7e3f4] bg-white px-2 py-1 text-xs font-semibold">{items.length}</span>
+        <span className="rounded-full border border-[#d7e3f4] bg-[#eef4ff] px-2 py-1 text-xs font-semibold">{items.length}</span>
       </div>
 
-      {items.length === 0 ? <p className="rounded-2xl border border-dashed border-[#d7e3f4] bg-white p-3 text-sm text-[#5e6e80]">Nothing here yet.</p> : null}
+      {items.length === 0 ? <p className="rounded-2xl border border-dashed border-[#d7e3f4] bg-[#f3f8ff] p-3 text-sm text-[#5e6e80]">Nothing here yet.</p> : null}
 
       <div className="hidden overflow-x-auto md:block">
-        <table className="w-full min-w-[780px] overflow-hidden rounded-xl border border-[#d7e3f4] bg-white text-left text-sm">
-          <thead className="bg-[#f7f9ff] text-[#5e6e80]">
+        <table className="w-full min-w-[780px] overflow-hidden rounded-xl border border-[#d7e3f4] bg-[#f4f9ff] text-left text-sm">
+          <thead className="bg-[#eaf2ff] text-[#5e6e80]">
             <tr>
               <th className="px-3 py-2">Task</th>
               <th className="px-3 py-2">Room</th>
@@ -209,7 +209,7 @@ function TaskTableRow({
                   name="note"
                   type="text"
                   placeholder="Note"
-                  className="w-24 rounded-xl border border-[#d7e3f4] bg-white px-2 py-2 text-xs"
+                  className="w-24 rounded-xl border border-[#d7e3f4] bg-[#f8fbff] px-2 py-2 text-xs"
                 />
                 <button className="action-btn bright">Done</button>
               </form>
@@ -267,7 +267,7 @@ function TaskMobileCard({
             </form>
             <form action={completeTaskAction} className="flex items-center gap-2">
               <input type="hidden" name="taskId" value={task.id} />
-              <input name="note" type="text" placeholder="Note" className="w-24 rounded-xl border border-[#d7e3f4] bg-white px-2 py-2 text-xs" />
+              <input name="note" type="text" placeholder="Note" className="w-24 rounded-xl border border-[#d7e3f4] bg-[#f8fbff] px-2 py-2 text-xs" />
               <button className="action-btn bright">Done</button>
             </form>
           </>
@@ -284,7 +284,7 @@ function TaskMobileCard({
 
 function StatChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[#d7e3f4] bg-white px-3 py-2">
+    <div className="rounded-xl border border-[#d7e3f4] bg-[#eef4ff] px-3 py-2">
       <p className="text-[11px] uppercase tracking-wide text-[#5e6e80]">{label}</p>
       <p className="text-lg font-bold leading-none text-[#17263a]">{value}</p>
     </div>

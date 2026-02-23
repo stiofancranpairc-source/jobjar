@@ -171,3 +171,11 @@
 - Validation completed:
   - `npm run lint` passed
   - `npm run build` passed
+- Ran a full color/surface polish pass to reduce "too many white boxes" across core app views:
+  - updated shared surface styles (`board-shell`, `playful-card`, `admin-input`, subtle/warn buttons) to tinted gradients
+  - Daily view (`/`) now uses tinted stat chips, task table backgrounds, counters, empty states, and note inputs
+  - Admin view (`/admin`) forms, tables, and advanced panels switched from plain white to soft blue tints
+  - Login view (`/login`) now uses the bright workday theme and tinted input surfaces
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed

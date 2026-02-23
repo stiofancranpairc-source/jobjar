@@ -66,14 +66,14 @@ export default async function AdminPage() {
           <h2 className="text-lg font-semibold">Step 1: People</h2>
           <p className="text-xs text-[#5e6e80]">Add each family member and set their personal login passcode.</p>
 
-          <form action={createPersonAction} className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[#d7e3f4] bg-white p-3 md:grid-cols-4">
+          <form action={createPersonAction} className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[#d7e3f4] bg-[#f2f8ff] p-3 md:grid-cols-4">
             <input name="displayName" type="text" required placeholder="Name" className="admin-input px-3 py-2 text-sm" />
             <input name="email" type="email" placeholder="Email (optional)" className="admin-input px-3 py-2 text-sm" />
             <input name="passcode" type="password" minLength={4} placeholder="Passcode (min 4)" className="admin-input px-3 py-2 text-sm" />
             <button className="action-btn bright">Add person</button>
           </form>
 
-          <div className="mt-3 overflow-x-auto rounded-xl border border-[#d7e3f4] bg-white">
+          <div className="mt-3 overflow-x-auto rounded-xl border border-[#d7e3f4] bg-[#f4f9ff]">
             <table className="min-w-full text-left text-xs sm:text-sm">
               <thead className="bg-[#f7f9ff] text-[#5e6e80]">
                 <tr>
@@ -114,7 +114,7 @@ export default async function AdminPage() {
           <h2 className="text-lg font-semibold">Step 2: Rooms / Areas</h2>
           <p className="text-xs text-[#5e6e80]">Define the spaces in the house where tasks happen.</p>
 
-          <form action={createRoomAction} className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[#d7e3f4] bg-white p-3 md:grid-cols-3">
+          <form action={createRoomAction} className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[#d7e3f4] bg-[#f2f8ff] p-3 md:grid-cols-3">
             <input name="name" type="text" required placeholder="Room name" className="admin-input px-3 py-2 text-sm" />
             <input name="designation" type="text" placeholder="Purpose" className="admin-input px-3 py-2 text-sm" />
             <button className="action-btn bright">Add room</button>
@@ -122,7 +122,7 @@ export default async function AdminPage() {
 
           <div className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">
             {rooms.map((room) => (
-              <article key={room.id} className="rounded-xl border border-[#d7e3f4] bg-white p-3">
+              <article key={room.id} className="rounded-xl border border-[#d7e3f4] bg-[#f7fbff] p-3">
                 <form action={updateRoomAction} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto_auto]">
                   <input type="hidden" name="roomId" value={room.id} />
                   <input name="name" type="text" defaultValue={room.name} className="admin-input px-3 py-2 text-sm" />
@@ -143,7 +143,7 @@ export default async function AdminPage() {
           <h2 className="text-lg font-semibold">Step 3: Tasks</h2>
           <p className="text-xs text-[#5e6e80]">Quick add first. Open Advanced for schedule and validation settings.</p>
 
-          <form action={createTaskAction} className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[#d7e3f4] bg-white p-3 md:grid-cols-4">
+          <form action={createTaskAction} className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[#d7e3f4] bg-[#f2f8ff] p-3 md:grid-cols-4">
             <input name="title" type="text" required placeholder="Task title" className="admin-input px-3 py-2 text-sm" />
             <select name="roomId" required className="admin-input px-3 py-2 text-sm">
               <option value="">Pick room</option>
@@ -162,7 +162,7 @@ export default async function AdminPage() {
               ))}
             </select>
             <input name="dueAt" type="datetime-local" className="admin-input px-3 py-2 text-sm" />
-            <details className="rounded-lg border border-[#d3e2ee] bg-white px-3 py-2 text-sm text-[#48637a] md:col-span-4">
+            <details className="rounded-lg border border-[#d3e2ee] bg-[#f8fbff] px-3 py-2 text-sm text-[#48637a] md:col-span-4">
               <summary className="cursor-pointer font-semibold">Advanced options</summary>
               <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3">
                 <select name="recurrenceType" defaultValue="weekly" className="admin-input px-3 py-2 text-sm">
@@ -184,7 +184,7 @@ export default async function AdminPage() {
             <button className="action-btn bright md:col-span-4">Add task</button>
           </form>
 
-          <div className="mt-3 overflow-hidden rounded-xl border border-[#d7e3f4] bg-white">
+          <div className="mt-3 overflow-hidden rounded-xl border border-[#d7e3f4] bg-[#f4f9ff]">
             <div className="admin-grid-header hidden px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[#5e6e80] md:grid md:grid-cols-[2fr_1fr_1fr_1fr_auto] md:gap-2">
               <p>Task</p>
               <p>Room</p>
@@ -229,7 +229,7 @@ export default async function AdminPage() {
                       Room: {roomNameById.get(task.roomId) ?? "Unknown"} • Assigned: {peopleById.get(task.assigneeUserId) ?? "Unassigned"}
                     </p>
                   </div>
-                  <details className="mt-2 rounded-lg border border-[#d3e2ee] bg-white px-2 py-1.5 text-xs text-[#48637a]">
+                  <details className="mt-2 rounded-lg border border-[#d3e2ee] bg-[#f8fbff] px-2 py-1.5 text-xs text-[#48637a]">
                     <summary className="cursor-pointer font-semibold">Advanced</summary>
                     <form action={updateTaskAction} className="mt-2 space-y-2">
                       <input type="hidden" name="taskId" value={task.id} />
@@ -269,7 +269,7 @@ export default async function AdminPage() {
 
 function ProgressChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[#d7e3f4] bg-white px-3 py-2">
+    <div className="rounded-xl border border-[#d7e3f4] bg-[#eef4ff] px-3 py-2">
       <p className="text-[11px] uppercase tracking-wide text-[#5e6e80]">{label}</p>
       <p className="text-lg font-bold leading-none text-[#17263a]">{value}</p>
     </div>
