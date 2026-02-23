@@ -152,3 +152,13 @@
 - Validation completed:
   - `npm run lint` passed
   - `npm run build` passed
+- Redesigned normal daily view (`/`) to a brighter board experience inspired by modern work-management UIs:
+  - new bright background and board container styling
+  - clearer top-level "Today Board" header with progress chips
+  - quick-add bar kept simple and prominent
+  - task lanes now render as table-style rows on desktop (Task/Room/Owner/Due/RAG/Actions)
+  - mobile keeps compact action cards for fast use
+  - preserved all task mechanics (start, done with note, reopen)
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed
