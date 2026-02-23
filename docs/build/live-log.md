@@ -179,3 +179,12 @@
 - Validation completed:
   - `npm run lint` passed
   - `npm run build` passed
+- Reworked Daily view (`/`) from flat table strips to a true Kanban-style board:
+  - switched to 3-column lane layout on desktop (To Do / In Progress / Done)
+  - removed desktop table rows and unified task presentation as colorful cards
+  - added lane-specific color surfaces and stronger top accent bars
+  - improved task-card action area so note input is more usable in-line
+  - kept all existing task actions and status logic intact
+- Validation completed:
+  - `npm run lint` passed
+  - `npm run build` passed

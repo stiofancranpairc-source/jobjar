@@ -96,15 +96,17 @@ export default async function Home() {
           </p>
         </header>
 
-        <TaskSection title="To Do" subtitle="Ready to start" items={todo} laneClass="row-todo" roomNameById={roomNameById} />
-        <TaskSection
-          title="In Progress"
-          subtitle="Started, not finished"
-          items={inProgress}
-          laneClass="row-progress"
-          roomNameById={roomNameById}
-        />
-        <TaskSection title="Done" subtitle="Completed items" items={done} laneClass="row-done" roomNameById={roomNameById} />
+        <section className="grid grid-cols-1 gap-3 xl:grid-cols-3">
+          <TaskSection title="To Do" subtitle="Ready to start" items={todo} laneClass="lane-kanban-todo" roomNameById={roomNameById} />
+          <TaskSection
+            title="In Progress"
+            subtitle="Started, not finished"
+            items={inProgress}
+            laneClass="lane-kanban-progress"
+            roomNameById={roomNameById}
+          />
+          <TaskSection title="Done" subtitle="Completed items" items={done} laneClass="lane-kanban-done" roomNameById={roomNameById} />
+        </section>
       </main>
     </div>
   );
@@ -124,7 +126,7 @@ function TaskSection({
   roomNameById: Map<string, string>;
 }) {
   return (
-    <section className={`board-shell ${laneClass}`}>
+    <section className={`board-shell kanban-lane ${laneClass}`}>
       <div className="mb-3 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-[#17263a]">{title}</h2>
@@ -135,36 +137,16 @@ function TaskSection({
 
       {items.length === 0 ? <p className="rounded-2xl border border-dashed border-[#d7e3f4] bg-[#f3f8ff] p-3 text-sm text-[#5e6e80]">Nothing here yet.</p> : null}
 
-      <div className="hidden overflow-x-auto md:block">
-        <table className="w-full min-w-[780px] overflow-hidden rounded-xl border border-[#d7e3f4] bg-[#f4f9ff] text-left text-sm">
-          <thead className="bg-[#eaf2ff] text-[#5e6e80]">
-            <tr>
-              <th className="px-3 py-2">Task</th>
-              <th className="px-3 py-2">Room</th>
-              <th className="px-3 py-2">Owner</th>
-              <th className="px-3 py-2">Due</th>
-              <th className="px-3 py-2">RAG</th>
-              <th className="px-3 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map(({ task, rag }) => (
-              <TaskTableRow key={task.id} task={task} rag={rag} roomName={roomNameById.get(task.roomId) ?? "Room"} />
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="space-y-2 md:hidden">
+      <div className="space-y-2">
         {items.map(({ task, rag }) => (
-          <TaskMobileCard key={task.id} task={task} rag={rag} roomName={roomNameById.get(task.roomId) ?? "Room"} />
+          <TaskBoardCard key={task.id} task={task} rag={rag} roomName={roomNameById.get(task.roomId) ?? "Room"} />
         ))}
       </div>
     </section>
   );
 }
 
-function TaskTableRow({
+function TaskBoardCard({
   task,
   rag,
   roomName,
@@ -175,69 +157,7 @@ function TaskTableRow({
 }) {
   const dueText = dueBadge(task.dueAt, task.status);
   return (
-    <tr className="border-t border-[#e7eef8]">
-      <td className="px-3 py-2">
-        <p className="font-semibold text-[#17263a]">
-          <span className="mr-1" aria-hidden>
-            {taskEmoji(task.title, roomName)}
-          </span>
-          {task.title}
-        </p>
-        {task.validationMode === "strict" ? <p className="text-xs font-semibold text-[#d67b00]">Strict check enabled</p> : null}
-      </td>
-      <td className="px-3 py-2 text-[#41546a]">{roomName}</td>
-      <td className="px-3 py-2 text-[#41546a]">{task.assigneeName ?? "Unassigned"}</td>
-      <td className="px-3 py-2">
-        <p className="text-[#17263a]">{formatTime(task.dueAt)}</p>
-        {task.startedAt ? <p className="text-xs text-[#5e6e80]">Running {elapsedLabel(task.startedAt)}</p> : null}
-      </td>
-      <td className="px-3 py-2">
-        <span className={`status-pill ${rag}`}>{rag}</span>
-        <span className="ml-2 rounded-full bg-[#edf3ff] px-2 py-1 text-xs font-semibold text-[#3566d0]">{dueText}</span>
-      </td>
-      <td className="px-3 py-2">
-        <div className="flex flex-wrap items-center gap-1.5">
-          {task.status !== "done" ? (
-            <>
-              <form action={startTaskAction}>
-                <input type="hidden" name="taskId" value={task.id} />
-                <button className="action-btn subtle">Start</button>
-              </form>
-              <form action={completeTaskAction} className="flex items-center gap-1.5">
-                <input type="hidden" name="taskId" value={task.id} />
-                <input
-                  name="note"
-                  type="text"
-                  placeholder="Note"
-                  className="w-24 rounded-xl border border-[#d7e3f4] bg-[#f8fbff] px-2 py-2 text-xs"
-                />
-                <button className="action-btn bright">Done</button>
-              </form>
-            </>
-          ) : (
-            <form action={reopenTaskAction}>
-              <input type="hidden" name="taskId" value={task.id} />
-              <button className="action-btn warn">Not done</button>
-            </form>
-          )}
-        </div>
-      </td>
-    </tr>
-  );
-}
-
-function TaskMobileCard({
-  task,
-  rag,
-  roomName,
-}: {
-  task: TaskItem;
-  rag: RagStatus;
-  roomName: string;
-}) {
-  const dueText = dueBadge(task.dueAt, task.status);
-  return (
-    <article className={`task-mobile-card ${rag}`}>
+    <article className={`task-mobile-card board-task ${rag}`}>
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-sm font-semibold text-[#17263a]">
@@ -249,6 +169,7 @@ function TaskMobileCard({
           <p className="mt-1 text-xs text-[#5e6e80]">
             {roomName} • {task.assigneeName ?? "Unassigned"} • {formatTime(task.dueAt)}
           </p>
+          {task.validationMode === "strict" ? <p className="mt-1 text-[11px] font-semibold text-[#d67b00]">Strict check enabled</p> : null}
         </div>
         <span className={`status-pill ${rag}`}>{rag}</span>
       </div>
@@ -265,9 +186,9 @@ function TaskMobileCard({
               <input type="hidden" name="taskId" value={task.id} />
               <button className="action-btn subtle">Start</button>
             </form>
-            <form action={completeTaskAction} className="flex items-center gap-2">
+            <form action={completeTaskAction} className="flex flex-1 items-center gap-2">
               <input type="hidden" name="taskId" value={task.id} />
-              <input name="note" type="text" placeholder="Note" className="w-24 rounded-xl border border-[#d7e3f4] bg-[#f8fbff] px-2 py-2 text-xs" />
+              <input name="note" type="text" placeholder="Note" className="min-w-0 flex-1 rounded-xl border border-[#d7e3f4] bg-[#f8fbff] px-2 py-2 text-xs" />
               <button className="action-btn bright">Done</button>
             </form>
           </>

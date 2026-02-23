@@ -127,6 +127,29 @@ body {
   padding: 0.85rem;
 }
 
+.kanban-lane {
+  min-height: 20rem;
+}
+
+.lane-kanban-todo {
+  border-top: 6px solid #5688ff;
+  background: linear-gradient(180deg, rgba(235, 244, 255, 0.95) 0%, rgba(228, 240, 255, 0.9) 100%);
+}
+
+.lane-kanban-progress {
+  border-top: 6px solid #00beaa;
+  background: linear-gradient(180deg, rgba(232, 252, 248, 0.95) 0%, rgba(222, 246, 242, 0.9) 100%);
+}
+
+.lane-kanban-done {
+  border-top: 6px solid #ffb020;
+  background: linear-gradient(180deg, rgba(255, 248, 229, 0.95) 0%, rgba(254, 242, 214, 0.9) 100%);
+}
+
+.board-task {
+  box-shadow: 0 8px 20px rgba(64, 103, 168, 0.1);
+}
+
 .task-mobile-card.red {
   border-color: #f2b8bf;
   background: linear-gradient(180deg, #fff4f6 0%, #ffecef 100%);
